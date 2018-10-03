@@ -2,6 +2,7 @@ group 'im.dlg'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
@@ -14,3 +15,5 @@ dependencies {
     compile project(':')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+mainClassName = 'Main'
