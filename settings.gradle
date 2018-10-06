@@ -1,2 +1,2 @@
 rootProject.name = 'bot-sdk'
-include 'examples/simple'
+include 'examples/simple', 'examples/reminder'
