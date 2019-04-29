@@ -20,6 +20,10 @@ public class ChannelWrapper {
         this.botConfig = botConfig;
     }
 
+    public BotConfig getBotConfig() {
+        return botConfig;
+    }
+
     public synchronized void connect() {
         try {
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());

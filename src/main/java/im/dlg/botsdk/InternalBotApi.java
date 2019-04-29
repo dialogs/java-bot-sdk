@@ -42,6 +42,11 @@ class InternalBotApi implements StreamObserver<SequenceAndUpdatesOuterClass.SeqU
     private static Integer appId = 11011;
     private Map<Class, List<UpdateListener>> subscribers = new ConcurrentHashMap<>();
 
+    InternalBotApi(ChannelWrapper wrapper, DialogExecutor executor) {
+        this.botConfig = wrapper.getBotConfig();
+        this.executor = executor;
+        this.channel = wrapper;
+    }
 
     InternalBotApi(BotConfig botConfig, DialogExecutor executor) {
         this.botConfig = botConfig;

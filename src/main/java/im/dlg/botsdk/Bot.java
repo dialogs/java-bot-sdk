@@ -47,11 +47,20 @@ public class Bot {
         Bot instance = new Bot(botConfig);
         instance.internalBotApi = new InternalBotApi(botConfig, instance.executor);
 
-        instance.voidCompletableFuture = instance.internalBotApi.start().thenAccept(v -> {
-            instance.runApis(instance.internalBotApi);
-        }).thenCompose(aVoid -> CompletableFuture.completedFuture(instance));
+        return getBotCompletableFuture(instance);
+    }
 
-        return instance.voidCompletableFuture;
+    /**
+     * Launches the bot with full config
+     *
+     * @param channelWrapper the constructed grpc channel with bot config object
+     * @return Future that completes when bot authorised
+     */
+    public static CompletableFuture<Bot> start(ChannelWrapper channelWrapper) {
+        Bot instance = new Bot();
+        instance.internalBotApi = new InternalBotApi(channelWrapper, instance.executor);
+
+        return getBotCompletableFuture(instance);
     }
 
     /**
@@ -64,6 +73,10 @@ public class Bot {
         Bot instance = new Bot();
         instance.internalBotApi = new InternalBotApi(botConfig, instance.executor);
 
+        return getBotCompletableFuture(instance);
+    }
+
+    private static CompletableFuture<Bot> getBotCompletableFuture(Bot instance) {
         instance.voidCompletableFuture = instance.internalBotApi.start().thenAccept(v -> {
             instance.runApis(instance.internalBotApi);
         }).thenCompose(aVoid -> CompletableFuture.completedFuture(instance));
