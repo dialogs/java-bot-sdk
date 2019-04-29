@@ -51,7 +51,7 @@ class InternalBotApi implements StreamObserver<SequenceAndUpdatesOuterClass.SeqU
     InternalBotApi(BotConfig botConfig, DialogExecutor executor) {
         this.botConfig = botConfig;
         this.executor = executor;
-        this.channel = new ChannelWrapper(this.botConfig);
+        this.channel = new NettyChannelWrapper(this.botConfig);
     }
 
     CompletableFuture<Void> start() {
