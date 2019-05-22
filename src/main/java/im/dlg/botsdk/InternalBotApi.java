@@ -42,11 +42,16 @@ class InternalBotApi implements StreamObserver<SequenceAndUpdatesOuterClass.SeqU
     private static Integer appId = 11011;
     private Map<Class, List<UpdateListener>> subscribers = new ConcurrentHashMap<>();
 
+    InternalBotApi(ChannelWrapper wrapper, DialogExecutor executor) {
+        this.botConfig = wrapper.getBotConfig();
+        this.executor = executor;
+        this.channel = wrapper;
+    }
 
     InternalBotApi(BotConfig botConfig, DialogExecutor executor) {
         this.botConfig = botConfig;
         this.executor = executor;
-        this.channel = new ChannelWrapper(this.botConfig);
+        this.channel = new NettyChannelWrapper(this.botConfig);
     }
 
     CompletableFuture<Void> start() {
