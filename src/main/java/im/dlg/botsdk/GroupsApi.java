@@ -5,6 +5,7 @@ import dialog.*;
 import im.dlg.botsdk.domain.Group;
 import im.dlg.botsdk.domain.GroupType;
 import im.dlg.botsdk.domain.Peer;
+import im.dlg.botsdk.utils.PeerUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +39,44 @@ public class GroupsApi {
                     new Peer(group.getId(), Peer.PeerType.GROUP, group.getAccessHash()),
                     GroupType.fromServer(group.getGroupType()));
         }, privateBot.executor.getExecutor());
+    }
+
+    public CompletableFuture<Void> inviteUser(Peer group, Peer peer) {
+        GroupsOuterClass.RequestInviteUser request = GroupsOuterClass.RequestInviteUser.newBuilder()
+                .setGroupPeer(PeerUtils.toGroupOutPeer(group))
+                .setUser(PeerUtils.toUserOutPeer(peer))
+                .setRid(LocalDateTime.now().getSecond())
+                .build();
+
+        return privateBot.withToken(
+                GroupsGrpc.newFutureStub(privateBot.channel.getChannel()),
+                stub -> stub.inviteUser(request)
+        ).thenApplyAsync(res -> null, privateBot.executor.getExecutor());
+    }
+
+    public CompletableFuture<Void> kickUser(Peer group, Peer peer) {
+        GroupsOuterClass.RequestKickUser request = GroupsOuterClass.RequestKickUser.newBuilder()
+                .setGroupPeer(PeerUtils.toGroupOutPeer(group))
+                .setUser(PeerUtils.toUserOutPeer(peer))
+                .setRid(LocalDateTime.now().getSecond())
+                .build();
+
+        return privateBot.withToken(
+                GroupsGrpc.newFutureStub(privateBot.channel.getChannel()),
+                stub -> stub.kickUser(request)
+        ).thenApplyAsync(res -> null, privateBot.executor.getExecutor());
+    }
+
+    public CompletableFuture<Void> leaveGroup(Peer group) {
+        GroupsOuterClass.RequestLeaveGroup request = GroupsOuterClass.RequestLeaveGroup.newBuilder()
+                .setGroupPeer(PeerUtils.toGroupOutPeer(group))
+                .setRid(LocalDateTime.now().getSecond())
+                .build();
+
+        return privateBot.withToken(
+                GroupsGrpc.newFutureStub(privateBot.channel.getChannel()),
+                stub -> stub.leaveGroup(request)
+        ).thenApplyAsync(res -> null, privateBot.executor.getExecutor());
     }
 
     public CompletableFuture<List<Group>> searchGroupByShortname(String query) {

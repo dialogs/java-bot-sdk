@@ -5,3 +5,4 @@ local.properties
 gradle-wrapper.properties
 build/
 gradle/
+*.iml

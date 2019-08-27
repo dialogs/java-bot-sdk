@@ -41,6 +41,20 @@ public class PeerUtils {
                 .build();
     }
 
+    public static Peers.GroupOutPeer toGroupOutPeer(Peer peer) {
+        return Peers.GroupOutPeer.newBuilder()
+                .setGroupId(peer.getId())
+                .setAccessHash(peer.getAccessHash())
+                .build();
+    }
+
+    public static Peers.UserOutPeer toUserOutPeer(Peer Peer) {
+        return Peers.UserOutPeer.newBuilder()
+                .setUid(Peer.getId())
+                .setAccessHash(Peer.getAccessHash())
+                .build();
+    }
+
     public static Peers.UserOutPeer toUserOutPeer(Peers.OutPeer outPeer) {
         return Peers.UserOutPeer.newBuilder()
                 .setUid(outPeer.getId())
