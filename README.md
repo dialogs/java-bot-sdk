@@ -31,7 +31,7 @@ dependencies {
 ```
 
 3) Create bot and subscribe on updates
-```
+``` java
 public class Main {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
