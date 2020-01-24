@@ -60,7 +60,7 @@ public class StatusApi {
                 internalBotApi.withObserverToken(ObsoleteGrpc.newStub(internalBotApi.channel.getChannel()),
                 stub -> stub.weakUpdates(statusStreamObserver));
 
-        return new StatusStream(listenerRegistry, outgoingCommandsObserver);
+        return statusStream = new StatusStream(listenerRegistry, outgoingCommandsObserver);
     }
 
 }
