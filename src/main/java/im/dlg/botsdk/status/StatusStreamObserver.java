@@ -1,6 +1,8 @@
 package im.dlg.botsdk.status;
 
 import dialog.ObsoleteOuterClass;
+import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateGroupOnline;
+import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateUserLastSeen;
 import im.dlg.botsdk.InternalBotApi;
 import im.dlg.botsdk.StatusApi;
 import im.dlg.botsdk.domain.DeviceType;
@@ -28,7 +30,7 @@ public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.O
     @Override
     public void onNext(ObsoleteOuterClass.ObsoleteWeakUpdateBox weakUpdate) {
         if (weakUpdate.hasUserLastSeen()) {
-            ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateUserLastSeen updateUserLastSeen = weakUpdate.getUserLastSeen();
+            ObsoleteUpdateUserLastSeen updateUserLastSeen = weakUpdate.getUserLastSeen();
 
             int userId = updateUserLastSeen.getUserId();
             UserOnlineStatusListener listener = listenerRegistry.getUserListener(userId);
@@ -47,7 +49,7 @@ public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.O
         }
 
         if (weakUpdate.hasGroupOnline()) {
-            ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateGroupOnline updateGroupOnline = weakUpdate.getGroupOnline();
+            ObsoleteUpdateGroupOnline updateGroupOnline = weakUpdate.getGroupOnline();
 
             int groupId = updateGroupOnline.getGroupId();
             GroupOnlineStatusListener listener = listenerRegistry.getGroupListener(groupId);
