@@ -34,6 +34,7 @@ public class Bot {
     private PeersApi peersApi;
     private SyncApi syncApi;
     private BotProfileApi botProfileApil;
+    private StatusApi statusApi;
 
     private DialogExecutor executor;
     private AsyncHttpClient asyncHttpClient;
@@ -109,6 +110,7 @@ public class Bot {
         peersApi = new PeersApi(internalBotApi);
         syncApi = new SyncApi(internalBotApi);
         botProfileApil = new BotProfileApi(internalBotApi);
+        statusApi = new StatusApi(internalBotApi);
     }
 
     private static AsyncHttpClient createHttpClient(BotConfig botConfig) {
@@ -213,4 +215,10 @@ public class Bot {
         lock();
         return botProfileApil;
     }
+
+    public StatusApi statusApi() {
+        lock();
+        return statusApi;
+    }
+
 }

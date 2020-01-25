@@ -33,9 +33,9 @@ import java.util.function.Function;
 import static dialog.SequenceAndUpdatesOuterClass.*;
 
 // TODO: extract StreamObserver to different object
-class InternalBotApi implements StreamObserver<SeqUpdateBox> {
+public class InternalBotApi implements StreamObserver<SeqUpdateBox> {
 
-    private static final long RECONNECT_DELAY = 1000;
+    public static final long RECONNECT_DELAY = 1000;
     private static final Integer appId = 11011;
     private final Logger log = LoggerFactory.getLogger(InternalBotApi.class);
 
@@ -133,7 +133,7 @@ class InternalBotApi implements StreamObserver<SeqUpdateBox> {
         });
     }
 
-    private void reconnect() {
+    public void reconnect() {
         channel.connect();
         withToken(metadata, SequenceAndUpdatesGrpc.newStub(channel.getChannel()), stub -> {
             stub.seqUpdates(Empty.newBuilder().build(), this);
@@ -149,6 +149,11 @@ class InternalBotApi implements StreamObserver<SeqUpdateBox> {
 
     <T extends AbstractStub<T>, R> R withToken(Metadata meta, T stub, Function<T, R> f) {
         T newStub = MetadataUtils.attachHeaders(stub, meta);
+        return f.apply(newStub);
+    }
+
+    <T extends AbstractStub<T>, R> StreamObserver<R> withObserverToken(T stub, Function<T, StreamObserver<R>> f) {
+        T newStub = MetadataUtils.attachHeaders(stub, metadata);
         return f.apply(newStub);
     }
 
