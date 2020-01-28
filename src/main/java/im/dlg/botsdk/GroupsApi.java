@@ -1,10 +1,7 @@
 package im.dlg.botsdk;
 
 import com.google.protobuf.StringValue;
-import dialog.GroupsGrpc;
-import dialog.GroupsOuterClass;
-import dialog.SearchGrpc;
-import dialog.SearchOuterClass;
+import dialog.*;
 import im.dlg.botsdk.domain.Group;
 import im.dlg.botsdk.domain.GroupType;
 import im.dlg.botsdk.domain.Peer;
@@ -12,9 +9,14 @@ import im.dlg.botsdk.domain.User;
 import im.dlg.botsdk.utils.PeerUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static dialog.GroupsOuterClass.*;
+import static dialog.Peers.*;
+import static dialog.SearchOuterClass.*;
 
 public class GroupsApi {
 
@@ -25,16 +27,16 @@ public class GroupsApi {
     }
 
     public CompletableFuture<Group> createGroup(String title, String username) {
-        return createGroup(title, username, null);
+        return createGroup(title, username, Collections.emptyList());
     }
 
     public CompletableFuture<Group> createGroup(String title, String username, List<User> users) {
-        GroupsOuterClass.RequestCreateGroup.Builder request = GroupsOuterClass.RequestCreateGroup.newBuilder();
-        if (users != null) {
-            for (User user : users) {
-                request.addUsers(PeerUtils.toUserOutPeer(PeerUtils.toServerOutPeer(user.getPeer())));
-            }
+        RequestCreateGroup.Builder request = RequestCreateGroup.newBuilder();
+
+        for (User user : users) {
+            request.addUsers(PeerUtils.toUserOutPeer(PeerUtils.toServerOutPeer(user.getPeer())));
         }
+
         request.setGroupType(GroupsOuterClass.GroupType.GROUPTYPE_GROUP)
                 .setTitle(title)
                 .setUsername(StringValue.of(username))
@@ -54,13 +56,13 @@ public class GroupsApi {
     }
 
     public CompletableFuture<List<Group>> searchGroupByShortname(String query) {
-        SearchOuterClass.RequestPeerSearch request = SearchOuterClass.RequestPeerSearch.newBuilder()
-                .addQuery(SearchOuterClass.SearchCondition.newBuilder()
-                        .setSearchPeerTypeCondition(SearchOuterClass.SearchPeerTypeCondition.newBuilder()
-                                .setPeerTypeValue(SearchOuterClass.SearchPeerType.SEARCHPEERTYPE_GROUPS_VALUE)
+        RequestPeerSearch request = RequestPeerSearch.newBuilder()
+                .addQuery(SearchCondition.newBuilder()
+                        .setSearchPeerTypeCondition(SearchPeerTypeCondition.newBuilder()
+                                .setPeerTypeValue(SearchPeerType.SEARCHPEERTYPE_GROUPS_VALUE)
                                 .build()))
-                .addQuery(SearchOuterClass.SearchCondition.newBuilder()
-                        .setSearchPieceText(SearchOuterClass.SearchPieceText.newBuilder()
+                .addQuery(SearchCondition.newBuilder()
+                        .setSearchPieceText(SearchPieceText.newBuilder()
                                 .setQuery(query)
                                 .build()))
                 .build();
@@ -83,4 +85,17 @@ public class GroupsApi {
                         }
                 ).collect(Collectors.toList()), privateBot.executor.getExecutor());
     }
+
+    public CompletableFuture<Void> joinGroupByPeer(Group group) {
+        GroupOutPeer groupOutPeer = PeerUtils.toGroupOutPeer(PeerUtils.toServerOutPeer(group.getPeer()));
+
+        RequestJoinGroupByPeer request = RequestJoinGroupByPeer.newBuilder()
+                .setPeer(groupOutPeer)
+                .build();
+
+        return privateBot.withToken(GroupsGrpc.newFutureStub(privateBot.channel.getChannel()),
+                stub -> stub.joinGroupByPeer(request))
+                .thenApply(t -> null);
+    }
+
 }
