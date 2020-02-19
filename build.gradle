@@ -101,7 +101,7 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5.6'
     compile 'org.asynchttpclient:async-http-client:2.6.0'
     compile group: 'org.javatuples', name: 'javatuples', version: '1.2'
-    compile 'io.netty:netty-tcnative-boringssl-static:2.0.17.Final'
+    compile 'io.netty:netty-tcnative-boringssl-static:2.0.29.Final'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.45'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.27'
     testCompile group: 'junit', name: 'junit', version: '4.12'
