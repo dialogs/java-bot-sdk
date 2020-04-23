@@ -1,24 +1,21 @@
 package im.dlg.botsdk;
 
 import com.google.protobuf.StringValue;
-import dialog.*;
+import dialog.ObsoleteGrpc;
+import dialog.TypingAndOnlineGrpc;
 import dialog.TypingAndOnlineOuterClass.RequestSetOnline;
 import im.dlg.botsdk.domain.DeviceType;
 import im.dlg.botsdk.status.StatusStream;
 import im.dlg.botsdk.status.StatusStreamListenerRegistry;
 import im.dlg.botsdk.status.StatusStreamObserver;
 import io.grpc.stub.StreamObserver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
-import static dialog.ObsoleteOuterClass.*;
+import static dialog.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
 
 public class StatusApi {
-
-    private final Logger logger = LoggerFactory.getLogger(StatusApi.class);
 
     private final InternalBotApi internalBotApi;
     private StatusStream statusStream;
@@ -58,7 +55,7 @@ public class StatusApi {
 
         StreamObserver<ObsoleteWeakUpdateCommand> outgoingCommandsObserver =
                 internalBotApi.withObserverToken(ObsoleteGrpc.newStub(internalBotApi.channel.getChannel()),
-                stub -> stub.weakUpdates(statusStreamObserver));
+                        stub -> stub.weakUpdates(statusStreamObserver));
 
         return statusStream = new StatusStream(listenerRegistry, outgoingCommandsObserver);
     }
