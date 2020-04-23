@@ -1,7 +1,10 @@
 package im.dlg.botsdk.utils;
 
+import dialog.ObsoleteOuterClass.ObsoletePeer;
+import dialog.ObsoleteOuterClass.ObsoletePeer.ObsoletePeerType;
 import dialog.Peers;
-import im.dlg.botsdk.domain.Peer;
+import im.dlg.botsdk.model.Peer;
+import im.dlg.botsdk.model.Peer.PeerType;
 
 public class PeerUtils {
     public static Peers.Peer toPeer(Peers.OutPeer op) {
@@ -64,23 +67,23 @@ public class PeerUtils {
 
     public static Peer toDomainPeer(Peers.OutPeer outPeer) {
 
-        Peer.PeerType type;
+        PeerType type;
 
         switch (outPeer.getType()) {
             case PEERTYPE_PRIVATE:
-                type = Peer.PeerType.PRIVATE;
+                type = PeerType.PRIVATE;
                 break;
             case PEERTYPE_GROUP:
-                type = Peer.PeerType.GROUP;
+                type = PeerType.GROUP;
                 break;
             case PEERTYPE_SIP:
-                type = Peer.PeerType.SIP;
+                type = PeerType.SIP;
                 break;
             case PEERTYPE_ENCRYPTEDPRIVATE:
             case PEERTYPE_UNKNOWN:
             case UNRECOGNIZED:
             default:
-                type = Peer.PeerType.UNKNOWN;
+                type = PeerType.UNKNOWN;
                 break;
         }
 
@@ -113,22 +116,40 @@ public class PeerUtils {
                 .build();
     }
 
-    public static Peer.PeerType toDomainPeerType(Peers.PeerType peerType) {
-        Peer.PeerType result = Peer.PeerType.UNKNOWN;
+    public static ObsoletePeer toObsoletePeer(Peer peer) {
+        return ObsoletePeer.newBuilder()
+                .setId(peer.getId())
+                .setAccessHash(peer.getAccessHash())
+                .setType(toObsoletePeerType(peer.getType()))
+                .build();
+    }
+
+    public static ObsoletePeerType toObsoletePeerType(PeerType peerType) {
         switch (peerType) {
-            case PEERTYPE_GROUP: result = Peer.PeerType.GROUP;
-                break;
-
-            case PEERTYPE_PRIVATE: result = Peer.PeerType.PRIVATE;
-                break;
-
-            case PEERTYPE_SIP: result = Peer.PeerType.SIP;
-                break;
-
-            case PEERTYPE_UNKNOWN: result = Peer.PeerType.UNKNOWN;
-                break;
+            case PRIVATE:
+                return ObsoletePeerType.OBSOLETE_PEERTYPE_PRIVATE;
+            case GROUP:
+                return ObsoletePeerType.OBSOLETE_PEERTYPE_GROUP;
+            case SIP:
+                return ObsoletePeerType.OBSOLETE_PEERTYPE_SIP;
+            case UNKNOWN:
+                return ObsoletePeerType.OBSOLETE_PEERTYPE_UNKNOWN;
+            default:
+                throw new IllegalStateException("Unsupported peer type");
         }
-        return result;
+    }
+
+    public static PeerType toDomainPeerType(Peers.PeerType peerType) {
+        switch (peerType) {
+            case PEERTYPE_GROUP:
+                return PeerType.GROUP;
+            case PEERTYPE_PRIVATE:
+                return PeerType.PRIVATE;
+            case PEERTYPE_SIP:
+                return PeerType.SIP;
+             default:
+                return PeerType.UNKNOWN;
+        }
     }
 
     public static String peerHasher(Peers.Peer peer) {

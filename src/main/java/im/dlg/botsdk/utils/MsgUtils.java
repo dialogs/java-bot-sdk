@@ -1,8 +1,8 @@
 package im.dlg.botsdk.utils;
 
 import dialog.MessagingOuterClass;
-import im.dlg.botsdk.domain.content.Content;
-import im.dlg.botsdk.domain.Message;
+import im.dlg.botsdk.model.content.Content;
+import im.dlg.botsdk.model.Message;
 
 import java.util.concurrent.atomic.AtomicLong;
 
