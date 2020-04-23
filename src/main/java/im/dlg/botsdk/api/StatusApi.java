@@ -1,4 +1,4 @@
-package im.dlg.botsdk;
+package im.dlg.botsdk.api;
 
 import com.google.protobuf.StringValue;
 import dialog.ObsoleteGrpc;

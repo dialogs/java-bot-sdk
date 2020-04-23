@@ -3,7 +3,7 @@ package im.dlg.botsdk.status;
 import dialog.ObsoleteOuterClass;
 import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateGroupOnline;
 import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateUserLastSeen;
-import im.dlg.botsdk.StatusApi;
+import im.dlg.botsdk.api.StatusApi;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
 import im.dlg.botsdk.listeners.UserOnlineStatusListener;

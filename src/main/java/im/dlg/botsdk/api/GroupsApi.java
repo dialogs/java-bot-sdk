@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static dialog.GroupsOuterClass.RequestJoinGroupByPeer;
+import static dialog.Peers.GroupOutPeer;
 import static dialog.SearchOuterClass.*;
 
 public class GroupsApi {
@@ -86,4 +88,17 @@ public class GroupsApi {
                             GroupType.fromServer(g.getGroupType()));
                 }).collect(Collectors.toList()));
     }
+
+    public CompletableFuture<Void> joinGroupByPeer(Group group) {
+        GroupOutPeer groupOutPeer = PeerUtils.toGroupOutPeer(PeerUtils.toServerOutPeer(group.getPeer()));
+
+        RequestJoinGroupByPeer request = RequestJoinGroupByPeer.newBuilder()
+                .setPeer(groupOutPeer)
+                .build();
+
+        return internalBot.withToken(GroupsGrpc.newFutureStub(channel),
+                stub -> stub.joinGroupByPeer(request))
+                .thenApply(t -> null);
+    }
+
 }
