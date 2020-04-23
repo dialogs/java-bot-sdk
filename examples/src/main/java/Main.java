@@ -1,21 +1,23 @@
 import im.dlg.botsdk.Bot;
 import im.dlg.botsdk.BotConfig;
-import im.dlg.botsdk.domain.content.DocumentContent;
-import im.dlg.botsdk.domain.content.TextContent;
-
-import java.util.concurrent.ExecutionException;
+import im.dlg.botsdk.BotSystem;
+import im.dlg.botsdk.BotSystemConfig;
+import im.dlg.botsdk.model.content.DocumentContent;
+import im.dlg.botsdk.model.content.TextContent;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    public static void main(String[] args) throws Exception {
 
-        BotConfig botConfig = BotConfig.Builder.aBotConfig()
+        BotSystemConfig systemConfig = BotSystemConfig.Builder.newBuilder()
                 .withHost("")
                 .withPort(443)
-                .withCertPath("")
-                .withCertPassword("").build();
+                .build();
 
-        Bot bot = Bot.start(botConfig).get();
+        BotSystem system = BotSystem.createSystem(systemConfig);
+
+        BotConfig botConfig = BotConfig.Builder.newBuilder().build();
+        Bot bot = system.startBot(botConfig).get();
 
         bot.messaging().onMessage(message ->
                 bot.users().get(message.getSender()).thenAccept(userOpt -> userOpt.ifPresent(user -> {

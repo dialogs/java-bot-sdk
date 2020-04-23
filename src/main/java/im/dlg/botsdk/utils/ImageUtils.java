@@ -44,4 +44,9 @@ public class ImageUtils {
         g2d.dispose();
         return resized;
     }
+
+    static {
+        System.setProperty("java.awt.headless", "true");
+    }
+
 }

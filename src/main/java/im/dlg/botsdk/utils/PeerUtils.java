@@ -4,7 +4,7 @@ import dialog.ObsoleteOuterClass;
 import dialog.ObsoleteOuterClass.ObsoletePeer;
 import dialog.ObsoleteOuterClass.ObsoletePeer.ObsoletePeerType;
 import dialog.Peers;
-import im.dlg.botsdk.domain.Peer;
+import im.dlg.botsdk.model.Peer;
 
 import static im.dlg.botsdk.domain.Peer.*;
 
