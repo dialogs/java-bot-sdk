@@ -1,12 +1,10 @@
 package im.dlg.botsdk.utils;
 
-import dialog.ObsoleteOuterClass;
 import dialog.ObsoleteOuterClass.ObsoletePeer;
 import dialog.ObsoleteOuterClass.ObsoletePeer.ObsoletePeerType;
 import dialog.Peers;
 import im.dlg.botsdk.model.Peer;
-
-import static im.dlg.botsdk.domain.Peer.*;
+import im.dlg.botsdk.model.Peer.PeerType;
 
 public class PeerUtils {
     public static Peers.Peer toPeer(Peers.OutPeer op) {
@@ -142,21 +140,16 @@ public class PeerUtils {
     }
 
     public static PeerType toDomainPeerType(Peers.PeerType peerType) {
-        PeerType result = PeerType.UNKNOWN;
         switch (peerType) {
-            case PEERTYPE_GROUP: result = PeerType.GROUP;
-                break;
-
-            case PEERTYPE_PRIVATE: result = PeerType.PRIVATE;
-                break;
-
-            case PEERTYPE_SIP: result = PeerType.SIP;
-                break;
-
-            case PEERTYPE_UNKNOWN: result = PeerType.UNKNOWN;
-                break;
+            case PEERTYPE_GROUP:
+                return PeerType.GROUP;
+            case PEERTYPE_PRIVATE:
+                return PeerType.PRIVATE;
+            case PEERTYPE_SIP:
+                return PeerType.SIP;
+             default:
+                return PeerType.UNKNOWN;
         }
-        return result;
     }
 
     public static String peerHasher(Peers.Peer peer) {

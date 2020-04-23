@@ -1,7 +1,7 @@
 package im.dlg.botsdk.status;
 
-import im.dlg.botsdk.light.GroupOnlineStatusListener;
-import im.dlg.botsdk.light.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
+import im.dlg.botsdk.listeners.UserOnlineStatusListener;
 
 import java.util.HashMap;
 import java.util.Map;

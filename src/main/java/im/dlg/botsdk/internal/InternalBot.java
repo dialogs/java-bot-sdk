@@ -20,6 +20,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.stub.AbstractStub;
 import io.grpc.stub.MetadataUtils;
+import io.grpc.stub.StreamObserver;
 import net.javacrumbs.futureconverter.java8guava.FutureConverter;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import static dialog.SequenceAndUpdatesOuterClass.*;
 
 public class InternalBot {
 
+    public static final long RECONNECT_DELAY = 1000;
     private static final Integer APP_ID = 11011;
 
     private final Logger log = LoggerFactory.getLogger(InternalBot.class);
@@ -128,7 +130,7 @@ public class InternalBot {
         });
     }
 
-    void reconnect() {
+    public void reconnect() {
         withToken(metadata, SequenceAndUpdatesGrpc.newStub(channel), stub -> {
             stub.seqUpdates(Empty.newBuilder().build(), stream);
             return new Object();
@@ -143,6 +145,11 @@ public class InternalBot {
 
     public <T extends AbstractStub<T>, R> R withToken(Metadata meta, T stub, Function<T, R> f) {
         T newStub = MetadataUtils.attachHeaders(stub, meta);
+        return f.apply(newStub);
+    }
+
+    public <T extends AbstractStub<T>, R> StreamObserver<R> withObserverToken(T stub, Function<T, StreamObserver<R>> f) {
+        T newStub = MetadataUtils.attachHeaders(stub, metadata);
         return f.apply(newStub);
     }
 

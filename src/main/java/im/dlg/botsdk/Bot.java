@@ -18,6 +18,7 @@ public class Bot {
     private final PeersApi peersApi;
     private final SyncApi syncApi;
     private final BotProfileApi botProfileApi;
+    private final StatusApi statusApi;
 
     public Bot(ManagedChannel channel, InternalBot internalBot, AsyncHttpClient asyncHttpClient) {
         this.interactiveApi = new InteractiveApi(channel, internalBot);
@@ -28,6 +29,7 @@ public class Bot {
         this.users = new UsersApi(channel, internalBot, peersApi);
         this.syncApi = new SyncApi(internalBot);
         this.botProfileApi = new BotProfileApi(channel, internalBot);
+        this.statusApi = new StatusApi(channel, internalBot);
     }
 
     /**
@@ -88,6 +90,10 @@ public class Bot {
 
     public BotProfileApi botProfileApi() {
         return botProfileApi;
+    }
+
+    public StatusApi statusApi() {
+        return statusApi;
     }
 
 }

@@ -4,10 +4,12 @@ import com.google.protobuf.StringValue;
 import dialog.ObsoleteGrpc;
 import dialog.TypingAndOnlineGrpc;
 import dialog.TypingAndOnlineOuterClass.RequestSetOnline;
-import im.dlg.botsdk.domain.DeviceType;
+import im.dlg.botsdk.internal.InternalBot;
+import im.dlg.botsdk.model.DeviceType;
 import im.dlg.botsdk.status.StatusStream;
 import im.dlg.botsdk.status.StatusStreamListenerRegistry;
 import im.dlg.botsdk.status.StatusStreamObserver;
+import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 
 import java.time.Duration;
@@ -17,11 +19,13 @@ import static dialog.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
 
 public class StatusApi {
 
-    private final InternalBotApi internalBotApi;
+    private final ManagedChannel channel;
+    private final InternalBot internalBot;
     private StatusStream statusStream;
 
-    public StatusApi(InternalBotApi internalBotApi) {
-        this.internalBotApi = internalBotApi;
+    public StatusApi(ManagedChannel channel, InternalBot internalBot) {
+        this.channel = channel;
+        this.internalBot = internalBot;
     }
 
     public CompletableFuture<Void> setOnline(DeviceType deviceType, String deviceCategory, Duration timeout) {
@@ -40,8 +44,8 @@ public class StatusApi {
                 .setTimeout(timeout.toMillis())
                 .build();
 
-        return internalBotApi.withToken(
-                TypingAndOnlineGrpc.newFutureStub(internalBotApi.channel.getChannel()),
+        return internalBot.withToken(
+                TypingAndOnlineGrpc.newFutureStub(channel),
                 stub -> stub.setOnline(request)).thenApply(t -> null);
     }
 
@@ -51,10 +55,10 @@ public class StatusApi {
         }
 
         StatusStreamListenerRegistry listenerRegistry = new StatusStreamListenerRegistry();
-        StatusStreamObserver statusStreamObserver = new StatusStreamObserver(internalBotApi, listenerRegistry);
+        StatusStreamObserver statusStreamObserver = new StatusStreamObserver(internalBot, listenerRegistry);
 
         StreamObserver<ObsoleteWeakUpdateCommand> outgoingCommandsObserver =
-                internalBotApi.withObserverToken(ObsoleteGrpc.newStub(internalBotApi.channel.getChannel()),
+                internalBot.withObserverToken(ObsoleteGrpc.newStub(channel),
                         stub -> stub.weakUpdates(statusStreamObserver));
 
         return statusStream = new StatusStream(listenerRegistry, outgoingCommandsObserver);

@@ -3,27 +3,27 @@ package im.dlg.botsdk.status;
 import dialog.ObsoleteOuterClass;
 import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateGroupOnline;
 import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateUserLastSeen;
-import im.dlg.botsdk.InternalBotApi;
 import im.dlg.botsdk.StatusApi;
-import im.dlg.botsdk.domain.DeviceType;
-import im.dlg.botsdk.light.GroupOnlineStatusListener;
-import im.dlg.botsdk.light.UserOnlineStatusListener;
+import im.dlg.botsdk.internal.InternalBot;
+import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
+import im.dlg.botsdk.listeners.UserOnlineStatusListener;
+import im.dlg.botsdk.model.DeviceType;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 
-import static im.dlg.botsdk.InternalBotApi.RECONNECT_DELAY;
+import static im.dlg.botsdk.internal.InternalBot.RECONNECT_DELAY;
 
 public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.ObsoleteWeakUpdateBox> {
 
     private final Logger logger = LoggerFactory.getLogger(StatusApi.class);
     private final StatusStreamListenerRegistry listenerRegistry;
-    private final InternalBotApi internalBotApi;
+    private final InternalBot internalBot;
 
-    public StatusStreamObserver(InternalBotApi internalBotApi, StatusStreamListenerRegistry listenerRegistry) {
-        this.internalBotApi = internalBotApi;
+    public StatusStreamObserver(InternalBot internalBot, StatusStreamListenerRegistry listenerRegistry) {
+        this.internalBot = internalBot;
         this.listenerRegistry = listenerRegistry;
     }
 
@@ -73,7 +73,7 @@ public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.O
             logger.error("Weak update reconnect sleep was interrupted", e);
         }
 
-        internalBotApi.reconnect();
+        internalBot.reconnect();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.O
             logger.error("Weak update reconnect sleep was interrupted", e);
         }
 
-        internalBotApi.reconnect();
+        internalBot.reconnect();
     }
 
 }

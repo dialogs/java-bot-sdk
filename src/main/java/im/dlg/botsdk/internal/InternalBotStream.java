@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dialog.SequenceAndUpdatesOuterClass.*;
+import static im.dlg.botsdk.internal.InternalBot.RECONNECT_DELAY;
 
 public class InternalBotStream implements StreamObserver<SeqUpdateBox> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InternalBot.class);
-    private static final long RECONNECT_DELAY = 1000;
 
     private final InternalBot internalBot;
     private final AtomicInteger currentSequence;
