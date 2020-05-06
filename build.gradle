@@ -99,7 +99,7 @@ dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compile group: 'io.grpc', name: 'protoc-gen-grpc-java', version: grpcVersion, ext: 'pom'
     compile 'org.apache.httpcomponents:httpclient:4.5.6'
-    compile 'org.asynchttpclient:async-http-client:2.6.0'
+    compile 'org.asynchttpclient:async-http-client:2.12.1'
     compile group: 'org.javatuples', name: 'javatuples', version: '1.2'
     compile 'io.netty:netty-tcnative-boringssl-static:2.0.30.Final'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.45'
