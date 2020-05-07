@@ -2,6 +2,7 @@ package im.dlg.botsdk;
 
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.utils.NetUtils;
+import io.grpc.DecompressorRegistry;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.netty.GrpcSslContexts;
@@ -77,7 +78,9 @@ public class BotSystem {
                 nettyChannelBuilder.usePlaintext();
             }
 
-            return nettyChannelBuilder.build();
+        nettyChannelBuilder.decompressorRegistry(DecompressorRegistry.emptyInstance());
+
+        return nettyChannelBuilder.build();
     }
 
     public CompletableFuture<Bot> startBot(BotConfig config) {
