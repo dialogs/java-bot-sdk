@@ -7,13 +7,15 @@ public class BotSystemConfig {
     private final String certPath;
     private final String certPassword;
     private final boolean secure;
+    private final boolean compression;
 
-    public BotSystemConfig(String host, int port, String certPath, String certPassword, boolean secure) {
+    public BotSystemConfig(String host, int port, String certPath, String certPassword, boolean secure, boolean compression) {
         this.host = host;
         this.port = port;
         this.certPath = certPath;
         this.certPassword = certPassword;
         this.secure = secure;
+        this.compression = compression;
     }
 
     public String getHost() {
@@ -36,6 +38,10 @@ public class BotSystemConfig {
         return secure;
     }
 
+    public boolean isCompression() {
+        return compression;
+    }
+
     public static class Builder {
 
         private String host;
@@ -43,6 +49,7 @@ public class BotSystemConfig {
         private String certPath;
         private String certPassword;
         private boolean secure;
+        private boolean compression;
 
         private Builder() {
 
@@ -73,8 +80,13 @@ public class BotSystemConfig {
             return this;
         }
 
+        public Builder withCompression(boolean compression) {
+            this.compression = compression;
+            return this;
+        }
+
         public BotSystemConfig build() {
-            return new BotSystemConfig(host, port, certPath, certPassword, secure);
+            return new BotSystemConfig(host, port, certPath, certPassword, secure, compression);
         }
 
         public static Builder newBuilder() {

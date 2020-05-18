@@ -57,28 +57,30 @@ public class BotSystem {
     }
 
     private static ManagedChannel createChannel(BotSystemConfig config) throws Exception {
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
 
-            NettyChannelBuilder nettyChannelBuilder = (NettyChannelBuilder) ManagedChannelBuilder
-                    .forAddress(config.getHost(), config.getPort())
-                    .idleTimeout(15, SECONDS)
-                    .keepAliveTime(30, SECONDS);
+        NettyChannelBuilder nettyChannelBuilder = (NettyChannelBuilder) ManagedChannelBuilder
+                .forAddress(config.getHost(), config.getPort())
+                .idleTimeout(15, SECONDS)
+                .keepAliveTime(30, SECONDS);
 
-            if (config.getCertPath() != null && config.getCertPassword() != null) {
-                File certFile = new File(config.getCertPath());
+        if (config.getCertPath() != null && config.getCertPassword() != null) {
+            File certFile = new File(config.getCertPath());
 
-                SslContext sslContext = GrpcSslContexts.forClient()
-                        .keyManager(NetUtils.createKeyFactory(certFile, config.getCertPassword()))
-                        .build();
+            SslContext sslContext = GrpcSslContexts.forClient()
+                    .keyManager(NetUtils.createKeyFactory(certFile, config.getCertPassword()))
+                    .build();
 
-                nettyChannelBuilder.sslContext(sslContext);
-            }
+            nettyChannelBuilder.sslContext(sslContext);
+        }
 
-            if (!config.isSecure()) {
-                nettyChannelBuilder.usePlaintext();
-            }
+        if (!config.isSecure()) {
+            nettyChannelBuilder.usePlaintext();
+        }
 
-        nettyChannelBuilder.decompressorRegistry(DecompressorRegistry.emptyInstance());
+        if (!config.isCompression()) {
+            nettyChannelBuilder.decompressorRegistry(DecompressorRegistry.emptyInstance());
+        }
 
         return nettyChannelBuilder.build();
     }
