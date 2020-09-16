@@ -1,8 +1,8 @@
 package im.dlg.botsdk.model;
 
-import dialog.TypingAndOnlineOuterClass;
+import im.dlg.grpc.services.PresenceOuterClass;
 
-import static dialog.TypingAndOnlineOuterClass.DeviceType.*;
+import static im.dlg.grpc.services.PresenceOuterClass.DeviceType.*;
 
 public enum DeviceType {
     UNKNOWN,
@@ -15,7 +15,7 @@ public enum DeviceType {
     CAR,
     TABLE;
 
-    public TypingAndOnlineOuterClass.DeviceType toGrpcType() {
+    public PresenceOuterClass.DeviceType toGrpcType() {
         switch (this) {
             case GENERIC:
                 return DEVICETYPE_GENERIC;

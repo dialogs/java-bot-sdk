@@ -3,18 +3,20 @@ package im.dlg.botsdk.model.content;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import dialog.MessagingOuterClass;
-import dialog.Miscellaneous;
+import im.dlg.grpc.services.MessagingOuterClass;
+import im.dlg.grpc.services.Miscellaneous;
+
+import static im.dlg.grpc.services.MessagingOuterClass.*;
 
 public class TextContent extends Content {
 
-    private String text;
-    private MessagingOuterClass.TextMessageEx textMessageEx;
-    private List<Integer> mentions;
-    private List<MessagingOuterClass.MessageMedia> medias;
-    private List<Miscellaneous.Any> extensions;
+    private final String text;
+    private final TextMessageEx textMessageEx;
+    private final List<Mention> mentions;
+    private final List<MessageMedia> medias;
+    private final List<Miscellaneous.Any> extensions;
 
-    TextContent(MessagingOuterClass.TextMessage content) {
+    TextContent(TextMessage content) {
         this.text = content.getText();
         this.textMessageEx = content.getExt();
         this.mentions = content.getMentionsList();
@@ -26,15 +28,15 @@ public class TextContent extends Content {
         return text;
     }
 
-    public MessagingOuterClass.TextMessageEx getTextMessageEx() {
+    public TextMessageEx getTextMessageEx() {
         return textMessageEx;
     }
 
-    public List<Integer> getMentions() {
+    public List<Mention> getMentions() {
         return mentions;
     }
 
-    public List<MessagingOuterClass.MessageMedia> getMedias() {
+    public List<MessageMedia> getMedias() {
         return medias;
     }
 
@@ -42,10 +44,10 @@ public class TextContent extends Content {
         return extensions;
     }
 
-    public static MessagingOuterClass.TextMessage createTextMessage(TextContent content) {
-        MessagingOuterClass.TextMessage.Builder textMessage = MessagingOuterClass.TextMessage
+    public static TextMessage createTextMessage(TextContent content) {
+        TextMessage.Builder textMessage = TextMessage
                 .newBuilder();
-        List<MessagingOuterClass.MessageMedia> medias = content.medias;
+        List<MessageMedia> medias = content.medias;
         if (medias != null) {
             IntStream.range(0, medias.size())
                     .forEach(index ->

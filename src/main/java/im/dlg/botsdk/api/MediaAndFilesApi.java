@@ -1,7 +1,7 @@
 package im.dlg.botsdk.api;
 
-import dialog.MediaAndFilesGrpc;
-import dialog.MediaAndFilesOuterClass.*;
+import im.dlg.grpc.services.MediaAndFilesGrpc;
+import im.dlg.grpc.services.MediaAndFilesOuterClass.*;
 import im.dlg.botsdk.internal.InternalBot;
 import io.grpc.ManagedChannel;
 import org.asynchttpclient.AsyncHttpClient;

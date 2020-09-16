@@ -1,8 +1,8 @@
 package im.dlg.botsdk.utils;
 
-import dialog.ObsoleteOuterClass.ObsoletePeer;
-import dialog.ObsoleteOuterClass.ObsoletePeer.ObsoletePeerType;
-import dialog.Peers;
+import im.dlg.grpc.services.ObsoleteOuterClass.ObsoletePeer;
+import im.dlg.grpc.services.ObsoleteOuterClass.ObsoletePeer.ObsoletePeerType;
+import im.dlg.grpc.services.Peers;
 import im.dlg.botsdk.model.Peer;
 import im.dlg.botsdk.model.Peer.PeerType;
 

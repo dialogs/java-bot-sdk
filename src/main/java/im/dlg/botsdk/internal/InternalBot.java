@@ -5,11 +5,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Empty;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.StringValue;
-import dialog.*;
-import dialog.MessagingOuterClass.Dialog;
-import dialog.MessagingOuterClass.HistoryMessage;
-import dialog.MessagingOuterClass.ListLoadMode;
-import dialog.MessagingOuterClass.RequestLoadDialogs;
+import im.dlg.grpc.services.*;
+import im.dlg.grpc.services.MessagingOuterClass.Dialog;
+import im.dlg.grpc.services.MessagingOuterClass.HistoryMessage;
+import im.dlg.grpc.services.MessagingOuterClass.ListLoadMode;
+import im.dlg.grpc.services.MessagingOuterClass.RequestLoadDialogs;
 import im.dlg.botsdk.BotConfig;
 import im.dlg.botsdk.BotCredentials;
 import im.dlg.botsdk.model.Message;
@@ -33,10 +33,10 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static dialog.AuthenticationOuterClass.*;
-import static dialog.Peers.*;
-import static dialog.RegistrationOuterClass.*;
-import static dialog.SequenceAndUpdatesOuterClass.*;
+import static im.dlg.grpc.services.AuthenticationOuterClass.*;
+import static im.dlg.grpc.services.Peers.*;
+import static im.dlg.grpc.services.RegistrationOuterClass.*;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.*;
 
 public class InternalBot {
 
@@ -93,9 +93,6 @@ public class InternalBot {
                         AuthenticationGrpc.newFutureStub(channel),
                         stub -> stub.startAnonymousAuth(
                                 RequestStartAnonymousAuth.newBuilder()
-                                        .setApiKey("BotSdk")
-                                        .setAppId(APP_ID)
-                                        .setDeviceTitle(config.getName())
                                         .addPreferredLanguages("RU")
                                         .setTimeZone(StringValue.newBuilder().setValue("+3").build())
                                         .build()
@@ -110,9 +107,6 @@ public class InternalBot {
                                 AuthenticationGrpc.newFutureStub(channel),
                                 stub -> stub.startTokenAuth(
                                         RequestStartTokenAuth.newBuilder()
-                                                .setApiKey("BotSdk")
-                                                .setAppId(APP_ID)
-                                                .setDeviceTitle(config.getName())
                                                 .addPreferredLanguages("RU")
                                                 .setTimeZone(StringValue.newBuilder().setValue("+3").build())
                                                 .setToken(credentials.getValue())
@@ -125,9 +119,6 @@ public class InternalBot {
                                 stub -> stub.startUsernameAuth(
                                         RequestStartUsernameAuth.newBuilder()
                                                 .setUsername(config.getName())
-                                                .setApiKey("BotSdk")
-                                                .setAppId(APP_ID)
-                                                .setDeviceTitle(config.getName())
                                                 .addPreferredLanguages("RU")
                                                 .setTimeZone(StringValue.newBuilder().setValue("+3").build())
                                                 .build()

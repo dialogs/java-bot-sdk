@@ -1,7 +1,7 @@
 package im.dlg.botsdk.utils;
 
 import com.google.common.collect.Sets;
-import dialog.Miscellaneous;
+import im.dlg.grpc.services.Miscellaneous;
 
 import java.util.Set;
 

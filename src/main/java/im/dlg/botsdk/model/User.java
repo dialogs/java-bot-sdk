@@ -1,6 +1,6 @@
 package im.dlg.botsdk.model;
 
-import dialog.UsersOuterClass;
+import im.dlg.grpc.services.UsersOuterClass;
 
 public class User {
 

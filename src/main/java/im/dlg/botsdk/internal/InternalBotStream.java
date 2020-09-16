@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static dialog.SequenceAndUpdatesOuterClass.*;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.*;
 import static im.dlg.botsdk.internal.InternalBot.RECONNECT_DELAY;
 
 public class InternalBotStream implements StreamObserver<SeqUpdateBox> {

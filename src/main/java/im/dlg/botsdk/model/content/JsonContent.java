@@ -1,6 +1,6 @@
 package im.dlg.botsdk.model.content;
 
-import dialog.MessagingOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass;
 
 public class JsonContent extends Content {
     private String rawJson;

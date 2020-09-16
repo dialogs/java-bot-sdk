@@ -2,11 +2,11 @@ package im.dlg.botsdk.api;
 
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
-import dialog.Definitions;
-import dialog.MessagingGrpc;
-import dialog.MessagingOuterClass;
-import dialog.MessagingOuterClass.*;
-import dialog.Peers;
+import im.dlg.grpc.services.Definitions;
+import im.dlg.grpc.services.MessagingGrpc;
+import im.dlg.grpc.services.MessagingOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass.*;
+import im.dlg.grpc.services.Peers;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.listeners.MessageListener;
 import im.dlg.botsdk.model.Message;
@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static dialog.MediaAndFilesOuterClass.FastThumb;
+import static im.dlg.grpc.services.MediaAndFilesOuterClass.FastThumb;
 
 /**
  * Central class for messaging API

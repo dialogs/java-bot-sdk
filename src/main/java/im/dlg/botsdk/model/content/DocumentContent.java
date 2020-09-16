@@ -1,7 +1,7 @@
 package im.dlg.botsdk.model.content;
 
-import dialog.MediaAndFilesOuterClass;
-import dialog.MessagingOuterClass;
+import im.dlg.grpc.services.MediaAndFilesOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass;
 
 public class DocumentContent extends Content {
 

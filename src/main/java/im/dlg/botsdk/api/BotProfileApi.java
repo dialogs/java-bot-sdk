@@ -1,15 +1,15 @@
 package im.dlg.botsdk.api;
 
 import com.google.protobuf.StringValue;
-import dialog.ProfileGrpc;
+import im.dlg.grpc.services.ProfileGrpc;
 import im.dlg.botsdk.internal.InternalBot;
 import io.grpc.ManagedChannel;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
-import static dialog.ProfileOuterClass.RequestEditAbout;
-import static dialog.ProfileOuterClass.RequestEditName;
+import static im.dlg.grpc.services.ProfileOuterClass.RequestEditAbout;
+import static im.dlg.grpc.services.ProfileOuterClass.RequestEditName;
 
 public class BotProfileApi {
 

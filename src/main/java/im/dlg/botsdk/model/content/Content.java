@@ -1,6 +1,6 @@
 package im.dlg.botsdk.model.content;
 
-import dialog.MessagingOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass;
 
 public abstract class Content {
     public static Content fromMessage(MessagingOuterClass.MessageContent message) {

@@ -1,8 +1,8 @@
 package im.dlg.botsdk.api;
 
 import com.google.protobuf.StringValue;
-import dialog.MessagingGrpc;
-import dialog.MessagingOuterClass.*;
+import im.dlg.grpc.services.MessagingGrpc;
+import im.dlg.grpc.services.MessagingOuterClass.*;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.listeners.InteractiveEventListener;
 import im.dlg.botsdk.model.InteractiveEvent;

@@ -2,7 +2,7 @@ package im.dlg.botsdk.model.media;
 
 import com.google.protobuf.StringValue;
 
-import dialog.MessagingOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass;
 
 public class WebPageMedia {
     private String url;

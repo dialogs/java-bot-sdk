@@ -1,21 +1,20 @@
 package im.dlg.botsdk.api;
 
-import com.google.protobuf.StringValue;
-import dialog.ObsoleteGrpc;
-import dialog.TypingAndOnlineGrpc;
-import dialog.TypingAndOnlineOuterClass.RequestSetOnline;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.model.DeviceType;
 import im.dlg.botsdk.status.StatusStream;
 import im.dlg.botsdk.status.StatusStreamListenerRegistry;
 import im.dlg.botsdk.status.StatusStreamObserver;
+import im.dlg.grpc.services.ObsoleteGrpc;
+import im.dlg.grpc.services.PresenceGrpc;
+import im.dlg.grpc.services.PresenceOuterClass.RequestSetOnline;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
-import static dialog.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
+import static im.dlg.grpc.services.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
 
 public class StatusApi {
 
@@ -28,24 +27,23 @@ public class StatusApi {
         this.internalBot = internalBot;
     }
 
-    public CompletableFuture<Void> setOnline(DeviceType deviceType, String deviceCategory, Duration timeout) {
-        return setOnlineStatus(true, deviceType, deviceCategory, timeout);
+    public CompletableFuture<Void> setOnline(DeviceType deviceType, Duration timeout) {
+        return setOnlineStatus(true, deviceType, timeout);
     }
 
-    public CompletableFuture<Void> setOffline(DeviceType deviceType, String deviceCategory, Duration timeout) {
-        return setOnlineStatus(false, deviceType, deviceCategory, timeout);
+    public CompletableFuture<Void> setOffline(DeviceType deviceType, Duration timeout) {
+        return setOnlineStatus(false, deviceType, timeout);
     }
 
-    private CompletableFuture<Void> setOnlineStatus(boolean status, DeviceType deviceType, String deviceCategory, Duration timeout) {
+    private CompletableFuture<Void> setOnlineStatus(boolean status, DeviceType deviceType, Duration timeout) {
         RequestSetOnline request = RequestSetOnline.newBuilder()
                 .setIsOnline(status)
                 .setDeviceType(deviceType.toGrpcType())
-                .setDeviceCategory(StringValue.newBuilder().setValue(deviceCategory).build())
                 .setTimeout(timeout.toMillis())
                 .build();
 
         return internalBot.withToken(
-                TypingAndOnlineGrpc.newFutureStub(channel),
+                PresenceGrpc.newFutureStub(channel),
                 stub -> stub.setOnline(request)).thenApply(t -> null);
     }
 

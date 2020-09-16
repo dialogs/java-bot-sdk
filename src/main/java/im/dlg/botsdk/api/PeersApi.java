@@ -1,8 +1,8 @@
 package im.dlg.botsdk.api;
 
-import dialog.Peers;
-import dialog.SearchGrpc;
-import dialog.SearchOuterClass;
+import im.dlg.grpc.services.Peers;
+import im.dlg.grpc.services.SearchGrpc;
+import im.dlg.grpc.services.SearchOuterClass;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.model.Peer;
 import im.dlg.botsdk.utils.PeerUtils;

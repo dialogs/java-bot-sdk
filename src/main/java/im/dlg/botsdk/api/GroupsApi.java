@@ -1,10 +1,10 @@
 package im.dlg.botsdk.api;
 
 import com.google.protobuf.StringValue;
-import dialog.GroupsGrpc;
-import dialog.GroupsOuterClass;
-import dialog.GroupsOuterClass.RequestCreateGroup;
-import dialog.SearchGrpc;
+import im.dlg.grpc.services.GroupsGrpc;
+import im.dlg.grpc.services.GroupsOuterClass;
+import im.dlg.grpc.services.GroupsOuterClass.RequestCreateGroup;
+import im.dlg.grpc.services.SearchGrpc;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.model.Group;
 import im.dlg.botsdk.model.GroupType;
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static dialog.GroupsOuterClass.RequestJoinGroupByPeer;
-import static dialog.Peers.GroupOutPeer;
-import static dialog.SearchOuterClass.*;
+import static im.dlg.grpc.services.GroupsOuterClass.RequestJoinGroupByPeer;
+import static im.dlg.grpc.services.Peers.GroupOutPeer;
+import static im.dlg.grpc.services.SearchOuterClass.*;
 
 public class GroupsApi {
 

@@ -1,6 +1,6 @@
 package im.dlg.botsdk.model.media;
 
-import dialog.MediaAndFilesOuterClass;
+import im.dlg.grpc.services.MediaAndFilesOuterClass;
 
 public class FileLocation {
     private long fileId;

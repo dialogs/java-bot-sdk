@@ -1,6 +1,6 @@
 package im.dlg.botsdk.model;
 
-import dialog.GroupsOuterClass;
+import im.dlg.grpc.services.GroupsOuterClass;
 
 public enum GroupType {
     GROUPTYPE_GROUP,

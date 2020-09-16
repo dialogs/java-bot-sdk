@@ -2,7 +2,7 @@ package im.dlg.botsdk.model.media;
 
 import java.util.List;
 
-import dialog.MessagingOuterClass;
+import im.dlg.grpc.services.MessagingOuterClass;
 import im.dlg.botsdk.model.interactive.InteractiveGroup;
 
 public class MediaMessage {

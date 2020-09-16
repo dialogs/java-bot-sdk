@@ -1,6 +1,6 @@
 package im.dlg.botsdk.status;
 
-import dialog.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
+import im.dlg.grpc.services.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
 import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
 import im.dlg.botsdk.listeners.UserOnlineStatusListener;
 import im.dlg.botsdk.model.Group;
@@ -9,7 +9,7 @@ import im.dlg.botsdk.model.User;
 import im.dlg.botsdk.utils.PeerUtils;
 import io.grpc.stub.StreamObserver;
 
-import static dialog.ObsoleteOuterClass.ObsoletePeersList;
+import static im.dlg.grpc.services.ObsoleteOuterClass.ObsoletePeersList;
 
 public class StatusStream {
 

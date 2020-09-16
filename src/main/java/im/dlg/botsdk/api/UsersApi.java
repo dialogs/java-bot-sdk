@@ -1,7 +1,7 @@
 package im.dlg.botsdk.api;
 
 import com.google.common.collect.Sets;
-import dialog.*;
+import im.dlg.grpc.services.*;
 import im.dlg.botsdk.internal.InternalBot;
 import im.dlg.botsdk.model.Peer;
 import im.dlg.botsdk.model.User;
@@ -14,8 +14,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static dialog.UsersOuterClass.FullUser;
-import static dialog.UsersOuterClass.RequestLoadFullUsers;
+import static im.dlg.grpc.services.UsersOuterClass.FullUser;
+import static im.dlg.grpc.services.UsersOuterClass.RequestLoadFullUsers;
 
 /**
  * Api to load user info

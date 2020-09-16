@@ -1,6 +1,6 @@
 package im.dlg.botsdk.utils;
 
-import dialog.Definitions;
+import im.dlg.grpc.services.Definitions;
 
 import java.util.Calendar;
 import java.util.TimeZone;
