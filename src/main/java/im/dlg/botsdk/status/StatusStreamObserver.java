@@ -1,22 +1,29 @@
 package im.dlg.botsdk.status;
 
-import im.dlg.grpc.services.ObsoleteOuterClass;
-import im.dlg.grpc.services.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateGroupOnline;
-import im.dlg.grpc.services.ObsoleteOuterClass.ObsoleteWeakUpdateBox.ObsoleteUpdateUserLastSeen;
 import im.dlg.botsdk.api.StatusApi;
 import im.dlg.botsdk.internal.InternalBot;
-import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
-import im.dlg.botsdk.listeners.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.GroupOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.typing.GroupTypingStatusListener;
+import im.dlg.botsdk.listeners.typing.UserTypingStatusListener;
 import im.dlg.botsdk.model.DeviceType;
+import im.dlg.botsdk.model.TypingType;
+import im.dlg.grpc.services.PresenceOuterClass;
+import im.dlg.grpc.services.PresenceOuterClass.UpdateGroupOnline;
+import im.dlg.grpc.services.PresenceOuterClass.UpdateUserLastSeen;
 import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static im.dlg.botsdk.internal.InternalBot.RECONNECT_DELAY;
+import static im.dlg.grpc.services.PresenceOuterClass.*;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.WeakUpdateBox;
 
-public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.ObsoleteWeakUpdateBox> {
+public class StatusStreamObserver implements StreamObserver<WeakUpdateBox> {
 
     private final Logger logger = LoggerFactory.getLogger(StatusApi.class);
     private final StatusStreamListenerRegistry listenerRegistry;
@@ -28,37 +35,78 @@ public class StatusStreamObserver implements StreamObserver<ObsoleteOuterClass.O
     }
 
     @Override
-    public void onNext(ObsoleteOuterClass.ObsoleteWeakUpdateBox weakUpdate) {
+    public void onNext(WeakUpdateBox weakUpdate) {
         if (weakUpdate.hasUserLastSeen()) {
-            ObsoleteUpdateUserLastSeen updateUserLastSeen = weakUpdate.getUserLastSeen();
+            UpdateUserLastSeen updateUserLastSeen = weakUpdate.getUserLastSeen();
 
-            int userId = updateUserLastSeen.getUserId();
-            UserOnlineStatusListener listener = listenerRegistry.getUserListener(userId);
+            int userId = updateUserLastSeen.getUid();
+            UserOnlineStatusListener listener = listenerRegistry.getUserOnlineListener(userId);
 
             if (listener != null) {
-                DeviceType deviceType = DeviceType.fromRawInt(updateUserLastSeen.getDeviceType());
-                String deviceCategory = updateUserLastSeen.getDeviceCategory();
-                Instant time = Instant.ofEpochMilli(updateUserLastSeen.getEpochMillis());
+                DeviceType deviceType = DeviceType.fromGrpcType(updateUserLastSeen.getDeviceType());
+                Instant lastSeenAt = Instant.ofEpochMilli(updateUserLastSeen.getLastSeenAt());
+                Instant currentTime = Instant.ofEpochMilli(updateUserLastSeen.getCurrentTime());
 
-                if (updateUserLastSeen.getIsOnline()) {
-                    listener.onUserOnline(userId, deviceType, deviceCategory, time);
+                if (lastSeenAt.isBefore(currentTime)) {
+                    listener.onUserOffline(userId, deviceType, lastSeenAt);
                 } else {
-                    listener.onUserOffline(userId, deviceType, deviceCategory, time);
+                    listener.onUserOnline(userId, deviceType, lastSeenAt);
                 }
             }
         }
 
         if (weakUpdate.hasGroupOnline()) {
-            ObsoleteUpdateGroupOnline updateGroupOnline = weakUpdate.getGroupOnline();
+            UpdateGroupOnline updateGroupOnline = weakUpdate.getGroupOnline();
 
             int groupId = updateGroupOnline.getGroupId();
-            GroupOnlineStatusListener listener = listenerRegistry.getGroupListener(groupId);
+            GroupOnlineStatusListener listener = listenerRegistry.getGroupOnlineListener(groupId);
 
             if (listener != null) {
                 int onlineUsers = updateGroupOnline.getCount();
-                Instant time = Instant.ofEpochMilli(updateGroupOnline.getClock());
 
-                listener.onGroupStatusUpdate(groupId, onlineUsers, time);
+                listener.onGroupOnlineStatusUpdate(groupId, onlineUsers);
+            }
+        }
+
+        if (weakUpdate.hasTyping()) {
+            UpdateTyping updateTyping = weakUpdate.getTyping();
+
+            int userId = updateTyping.getUserId();
+            UserTypingStatusListener listener = listenerRegistry.getUserTypingListener(userId);
+
+            if (listener != null) {
+                TypingType typingType = TypingType.fromGrpcType(updateTyping.getTypingType());
+
+                listener.onUserTyping(userId, typingType);
+            }
+        }
+
+        if (weakUpdate.hasTypingStop()) {
+            UpdateTypingStop updateTypingStop = weakUpdate.getTypingStop();
+
+            int userId = updateTypingStop.getUserId();
+            UserTypingStatusListener listener = listenerRegistry.getUserTypingListener(userId);
+
+            if (listener != null) {
+                listener.onUserStopTyping(userId);
+            }
+        }
+
+        if (weakUpdate.hasGroupTyping()) {
+            UpdateGroupTyping updateGroupTyping = weakUpdate.getGroupTyping();
+
+            int groupId = updateGroupTyping.getGroupId();
+            GroupTypingStatusListener listener = listenerRegistry.getGroupTypingListener(groupId);
+
+            if (listener != null) {
+                Map<Integer, TypingType> typingUsers = updateGroupTyping.getUsersTypingList()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                UpdateGroupTyping.UserTyping::getUserId,
+                                e -> TypingType.fromGrpcType(e.getTypingType())
+                        ));
+
+                listener.onGroupTypingStatusUpdate(groupId, typingUsers);
             }
         }
     }

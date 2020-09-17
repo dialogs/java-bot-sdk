@@ -1,38 +1,66 @@
 package im.dlg.botsdk.status;
 
-import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
-import im.dlg.botsdk.listeners.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.GroupOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.typing.GroupTypingStatusListener;
+import im.dlg.botsdk.listeners.typing.UserTypingStatusListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class StatusStreamListenerRegistry {
 
-    private final Map<Integer, UserOnlineStatusListener> userListeners = new HashMap<>();
-    private final Map<Integer, GroupOnlineStatusListener> groupListeners = new HashMap<>();
+    private final Map<Integer, UserOnlineStatusListener> userOnlineListeners = new HashMap<>();
+    private final Map<Integer, GroupOnlineStatusListener> groupOnlineListeners = new HashMap<>();
+    private final Map<Integer, UserTypingStatusListener> userTypingListeners = new HashMap<>();
+    private final Map<Integer, GroupTypingStatusListener> groupTypingListeners = new HashMap<>();
 
-    void setUserListener(int userId, UserOnlineStatusListener userOnlineStatusListener) {
-        userListeners.put(userId, userOnlineStatusListener);
+    void setUserOnlineListener(int userId, UserOnlineStatusListener userOnlineStatusListener) {
+        userOnlineListeners.put(userId, userOnlineStatusListener);
     }
 
-    void setGroupListener(int groupId, GroupOnlineStatusListener groupOnlineStatusListener) {
-        groupListeners.put(groupId, groupOnlineStatusListener);
+    void setUserTypingListener(int userId, UserTypingStatusListener userTypingStatusListener) {
+        userTypingListeners.put(userId, userTypingStatusListener);
     }
 
-    void removeUserListener(int userId) {
-        userListeners.remove(userId);
+    void setGroupOnlineListener(int groupId, GroupOnlineStatusListener groupOnlineStatusListener) {
+        groupOnlineListeners.put(groupId, groupOnlineStatusListener);
     }
 
-    void removeGroupListener(int groupId) {
-        groupListeners.remove(groupId);
+    void setGroupTypingListener(int groupId, GroupTypingStatusListener groupTypingStatusListener) {
+        groupTypingListeners.put(groupId, groupTypingStatusListener);
     }
 
-    UserOnlineStatusListener getUserListener(int userId) {
-        return userListeners.get(userId);
+    void removeUserOnlineListener(int userId) {
+        userOnlineListeners.remove(userId);
     }
 
-    GroupOnlineStatusListener getGroupListener(int groupId) {
-        return groupListeners.get(groupId);
+    void removeUserTypingListener(int userId) {
+        userTypingListeners.remove(userId);
+    }
+
+    void removeGroupOnlineListener(int groupId) {
+        groupOnlineListeners.remove(groupId);
+    }
+
+    void removeGroupTypingListener(int groupId) {
+        groupTypingListeners.remove(groupId);
+    }
+
+    UserOnlineStatusListener getUserOnlineListener(int userId) {
+        return userOnlineListeners.get(userId);
+    }
+
+    UserTypingStatusListener getUserTypingListener(int userId) {
+        return userTypingListeners.get(userId);
+    }
+
+    GroupOnlineStatusListener getGroupOnlineListener(int groupId) {
+        return groupOnlineListeners.get(groupId);
+    }
+
+    GroupTypingStatusListener getGroupTypingListener(int groupId) {
+        return groupTypingListeners.get(groupId);
     }
 
 }

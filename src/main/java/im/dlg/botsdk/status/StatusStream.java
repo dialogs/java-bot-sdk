@@ -1,66 +1,116 @@
 package im.dlg.botsdk.status;
 
-import im.dlg.grpc.services.ObsoleteOuterClass.ObsoleteWeakUpdateCommand;
-import im.dlg.botsdk.listeners.GroupOnlineStatusListener;
-import im.dlg.botsdk.listeners.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.GroupOnlineStatusListener;
+import im.dlg.botsdk.listeners.online.UserOnlineStatusListener;
+import im.dlg.botsdk.listeners.typing.GroupTypingStatusListener;
+import im.dlg.botsdk.listeners.typing.UserTypingStatusListener;
 import im.dlg.botsdk.model.Group;
 import im.dlg.botsdk.model.Peer;
 import im.dlg.botsdk.model.User;
 import im.dlg.botsdk.utils.PeerUtils;
 import io.grpc.stub.StreamObserver;
 
-import static im.dlg.grpc.services.ObsoleteOuterClass.ObsoletePeersList;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.PeersList;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.WeakUpdateCommand;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.WeakUpdateCommand.SubscribeToOnlines;
+import static im.dlg.grpc.services.SequenceAndUpdatesOuterClass.WeakUpdateCommand.newBuilder;
 
 public class StatusStream {
 
-    private final StreamObserver<ObsoleteWeakUpdateCommand> outgoingCommandsObserver;
+    private final StreamObserver<WeakUpdateCommand> outgoingCommandsObserver;
     private final StatusStreamListenerRegistry listenerRegistry;
 
-    public StatusStream(StatusStreamListenerRegistry listenerRegistry, StreamObserver<ObsoleteWeakUpdateCommand> outgoingCommandsObserver) {
+    public StatusStream(StatusStreamListenerRegistry listenerRegistry, StreamObserver<WeakUpdateCommand> outgoingCommandsObserver) {
         this.listenerRegistry = listenerRegistry;
         this.outgoingCommandsObserver = outgoingCommandsObserver;
     }
 
     public void subscribeToUserOnline(User user, UserOnlineStatusListener listener) {
-        listenerRegistry.setUserListener(user.getPeer().getId(), listener);
+        listenerRegistry.setUserOnlineListener(user.getPeer().getId(), listener);
         subscribeToPeerOnline(user.getPeer());
     }
 
     public void unsubscribeFromUserOnline(User user) {
         unsubscribeFromPeerOnline(user.getPeer());
-        listenerRegistry.removeUserListener(user.getPeer().getId());
+        listenerRegistry.removeUserOnlineListener(user.getPeer().getId());
     }
 
     public void subscribeToGroupOnline(Group group, GroupOnlineStatusListener listener) {
-        listenerRegistry.setGroupListener(group.getPeer().getId(), listener);
+        listenerRegistry.setGroupOnlineListener(group.getPeer().getId(), listener);
         subscribeToPeerOnline(group.getPeer());
     }
 
     public void unsubscribeFromGroupOnline(Group group) {
         unsubscribeFromPeerOnline(group.getPeer());
-        listenerRegistry.removeGroupListener(group.getPeer().getId());
+        listenerRegistry.removeGroupOnlineListener(group.getPeer().getId());
+    }
+
+    public void subscribeToUserTyping(User user, UserTypingStatusListener listener) {
+        listenerRegistry.setUserTypingListener(user.getPeer().getId(), listener);
+        subscribeToPeerTyping(user.getPeer());
+    }
+
+    public void subscribeToGroupTyping(Group group, GroupTypingStatusListener listener) {
+        listenerRegistry.setGroupTypingListener(group.getPeer().getId(), listener);
+        subscribeToPeerTyping(group.getPeer());
+    }
+
+    public void unsubscribeFromUserTyping(User user) {
+        unsubscribeFromPeerTyping(user.getPeer());
+        listenerRegistry.removeUserTypingListener(user.getPeer().getId());
+    }
+
+    public void unsubscribeFromGroupTyping(Group group) {
+        unsubscribeFromPeerTyping(group.getPeer());
+        listenerRegistry.removeGroupTypingListener(group.getPeer().getId());
     }
 
     private void subscribeToPeerOnline(Peer peer) {
-        ObsoletePeersList peersList = ObsoletePeersList.newBuilder()
-                .addPeers(PeerUtils.toObsoletePeer(peer))
+        PeersList peersList = PeersList.newBuilder()
+                .addPeers(PeerUtils.toServerPeer(peer))
                 .build();
 
-        ObsoleteWeakUpdateCommand command = ObsoleteWeakUpdateCommand.newBuilder()
-                .setSubscribeToOnlines(peersList)
+        SubscribeToOnlines subscribeToOnlines = SubscribeToOnlines.newBuilder()
+                .setPeers(peersList)
+                .setSendUsersId(false)
+                .build();
+
+        WeakUpdateCommand command = newBuilder()
+                .setSubscribeToOnlines(subscribeToOnlines)
                 .build();
 
         outgoingCommandsObserver.onNext(command);
     }
 
     private void unsubscribeFromPeerOnline(Peer peer) {
-        ObsoletePeersList peersList = ObsoletePeersList.newBuilder()
-                .addPeers(PeerUtils.toObsoletePeer(peer))
+        PeersList peersList = PeersList.newBuilder()
+                .addPeers(PeerUtils.toServerPeer(peer))
                 .build();
 
-        ObsoleteWeakUpdateCommand command = ObsoleteWeakUpdateCommand.newBuilder()
-                .setUnsubscribeFromOnlines(peersList)
+        WeakUpdateCommand command = newBuilder()
+                .setUnsubscribeFromOnlines(peersList).build();
+
+        outgoingCommandsObserver.onNext(command);
+    }
+
+    private void subscribeToPeerTyping(Peer peer) {
+        PeersList peersList = PeersList.newBuilder()
+                .addPeers(PeerUtils.toServerPeer(peer))
                 .build();
+
+        WeakUpdateCommand command = newBuilder()
+                .setSubscribeToTypings(peersList).build();
+
+        outgoingCommandsObserver.onNext(command);
+    }
+
+    private void unsubscribeFromPeerTyping(Peer peer) {
+        PeersList peersList = PeersList.newBuilder()
+                .addPeers(PeerUtils.toServerPeer(peer))
+                .build();
+
+        WeakUpdateCommand command = newBuilder()
+                .setUnsubscribeFromTypings(peersList).build();
 
         outgoingCommandsObserver.onNext(command);
     }

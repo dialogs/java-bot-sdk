@@ -33,17 +33,32 @@ public enum DeviceType {
                 return DEVICETYPE_CAR;
             case TABLE:
                 return DEVICETYPE_TABLE;
+            default:
+                return DEVICETYPE_UNKNOWN;
         }
-
-        return DEVICETYPE_UNKNOWN;
     }
 
-    public static DeviceType fromRawInt(int value) {
-        if (value < 0 || value > DeviceType.values().length) {
-            return DeviceType.UNKNOWN;
+    public static DeviceType fromGrpcType(PresenceOuterClass.DeviceType deviceType) {
+        switch (deviceType) {
+            case DEVICETYPE_GENERIC:
+                return DeviceType.GENERIC;
+            case DEVICETYPE_PC:
+                return DeviceType.PC;
+            case DEVICETYPE_MOBILE:
+                return DeviceType.MOBILE;
+            case DEVICETYPE_TABLET:
+                return DeviceType.TABLET;
+            case DEVICETYPE_WATCH:
+                return DeviceType.WATCH;
+            case DEVICETYPE_MIRROR:
+                return DeviceType.MIRROR;
+            case DEVICETYPE_CAR:
+                return DeviceType.CAR;
+            case DEVICETYPE_TABLE:
+                return DeviceType.TABLE;
+            default:
+                return DeviceType.UNKNOWN;
         }
-
-        return DeviceType.values()[value];
     }
 
 }

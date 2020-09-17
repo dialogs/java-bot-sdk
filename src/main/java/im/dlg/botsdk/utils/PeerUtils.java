@@ -90,30 +90,32 @@ public class PeerUtils {
         return new Peer(outPeer.getId(), type, outPeer.getAccessHash());
     }
 
+    public static Peers.Peer toServerPeer(Peer peer) {
+        return Peers.Peer.newBuilder()
+                .setId(peer.getId())
+                .setType(toServerPeerType(peer.getType()))
+                .build();
+    }
+
     public static Peers.OutPeer toServerOutPeer(Peer peer) {
-
-        Peers.PeerType type;
-        switch (peer.getType()) {
-
-            case PRIVATE:
-                type = Peers.PeerType.PEERTYPE_PRIVATE;
-                break;
-            case GROUP:
-                type = Peers.PeerType.PEERTYPE_GROUP;
-                break;
-            case SIP:
-                type = Peers.PeerType.PEERTYPE_SIP;
-                break;
-            default:
-                type = Peers.PeerType.PEERTYPE_UNKNOWN;
-                break;
-        }
-
         return Peers.OutPeer.newBuilder()
-                .setType(type)
+                .setType(toServerPeerType(peer.getType()))
                 .setId(peer.getId())
                 .setAccessHash(peer.getAccessHash())
                 .build();
+    }
+
+    private static Peers.PeerType toServerPeerType(PeerType type) {
+        switch (type) {
+            case PRIVATE:
+                return Peers.PeerType.PEERTYPE_PRIVATE;
+            case GROUP:
+                return Peers.PeerType.PEERTYPE_GROUP;
+            case SIP:
+                return Peers.PeerType.PEERTYPE_SIP;
+            default:
+                return Peers.PeerType.PEERTYPE_UNKNOWN;
+        }
     }
 
     public static ObsoletePeer toObsoletePeer(Peer peer) {
